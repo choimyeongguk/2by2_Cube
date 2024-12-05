@@ -3,17 +3,17 @@ class Cube:
     self.__CtoN = { 'W': 0, 'G': 1, 'R': 2, 'Y': 3, 'B': 4, 'O': 5 }
     self.__NtoC = { 0: 'W', 1: 'G', 2: 'R', 3: 'Y', 4: 'B', 5: 'O' }
     self.state = [
-        [ 'W', 'W', 'W', 'W' ], # 0, White,  윗 면
-        [ 'G', 'G', 'G', 'G' ], # 1, Green,  앞 면
-        [ 'R', 'R', 'R', 'R' ], # 2, Red,    오른 면
-        [ 'Y', 'Y', 'Y', 'Y' ], # 3, Yellow, 아랫 면
-        [ 'B', 'B', 'B', 'B' ], # 4, Blue,   뒷 면
-        [ 'O', 'O', 'O', 'O' ]  # 5, Orange, 왼 면
+        [ 'W', 'W', 'W', 'W' ], # 0, White,  Up
+        [ 'G', 'G', 'G', 'G' ], # 1, Green,  Front
+        [ 'R', 'R', 'R', 'R' ], # 2, Red,    Right
+        [ 'Y', 'Y', 'Y', 'Y' ], # 3, Yellow, Down
+        [ 'B', 'B', 'B', 'B' ], # 4, Blue,   Back
+        [ 'O', 'O', 'O', 'O' ]  # 5, Orange, Left
     ]
 
-  # 큐브 전개도 출력
+  # Print net of cube
   def print(self):
-    print(f'    {self.state[0][0]} {self.state[0][1]}')
+    print(f'\n    {self.state[0][0]} {self.state[0][1]}')
     print(f'    {self.state[0][3]} {self.state[0][2]}')
     for i in [ 5, 1, 2, 4 ]:
       print(f'{self.state[i][0]} {self.state[i][1]} ', end = '')
@@ -22,10 +22,10 @@ class Cube:
       print(f'{self.state[i][3]} {self.state[i][2]} ', end = '')
     print()
     print(f'    {self.state[3][0]} {self.state[3][1]}')
-    print(f'    {self.state[3][3]} {self.state[3][2]}')
-    print()
+    print(f'    {self.state[3][3]} {self.state[3][2]}\n')
+    return self
 
-  # 초기 큐브 상태 입력
+  # Input cube's color
   def input(self):
     self.state[0] = list(input('윗   면 입력 >> ').split())
     self.state[1] = list(input('앞   면 입력 >> ').split())
@@ -36,8 +36,10 @@ class Cube:
     if self.state[3][3] != 'Y' or self.state[4][2] != 'B' or self.state[5][3] != 'O':
       print('노-파-주 조각을 아래-뒤-왼쪽 자리에 위치해 주세요\n')
       self.input()
+    else:
+      return self
 
-  # 큐브 상태를 숫자로 변환. 120byte -> 32byte로 압축 가능
+  # Convert list to integar. 120byte -> 32byte
   def getNum(self):
     ret = 0
     for i in self.state:
@@ -46,7 +48,7 @@ class Cube:
         ret += self.__CtoN[j]
     return ret
 
-  # 숫자를 큐브 상태로 변환
+  # Convert integar to list
   def set(self, num):
     self.state = []
     for i in range(6):
@@ -56,7 +58,13 @@ class Cube:
         num //= 6
     return self
 
-  # 회전 구현
+  # solved -> True, not solved -> False
+  def solved(self):
+    if self.getNum() == 731796345686735:
+      return True
+    return False
+
+  # Rotate based on args
   def rotate(self, face, clockwise, li1, li2):
     li = [ 3, 2, 1 ] if clockwise else [ 1, 2, 3 ]
     tmp = self.state[face][0]
