@@ -23,6 +23,7 @@ class Cube:
     print()
     print(f'    {self.state[3][0]} {self.state[3][1]}')
     print(f'    {self.state[3][3]} {self.state[3][2]}')
+    print()
 
   # 초기 큐브 상태 입력
   def input(self):
@@ -32,9 +33,9 @@ class Cube:
     self.state[3] = list(input('아랫 면 입력 >> ').split())
     self.state[4] = list(input('뒷   면 입력 >> ').split())
     self.state[5] = list(input('왼   면 입력 >> ').split())
-    if self.state[3][0] != 'Y' or self.state[4][2] != 'B' or self.state[5][3] != 'O':
-      print('노-파-주 조각을 아래-뒤-왼쪽 자리에 위치해 주세요')
-      self.set()
+    if self.state[3][3] != 'Y' or self.state[4][2] != 'B' or self.state[5][3] != 'O':
+      print('노-파-주 조각을 아래-뒤-왼쪽 자리에 위치해 주세요\n')
+      self.input()
 
   # 큐브 상태를 숫자로 변환. 120byte -> 32byte로 압축 가능
   def getNum(self):
@@ -53,8 +54,9 @@ class Cube:
       for j in range(4):
         self.state[0].insert(0, self.__NtoC[num % 6])
         num //= 6
+    return self
 
-  # direct face 회전 구현
+  # 회전 구현
   def rotate(self, face, clockwise, li1, li2):
     li = [ 3, 2, 1 ] if clockwise else [ 1, 2, 3 ]
     tmp = self.state[face][0]
